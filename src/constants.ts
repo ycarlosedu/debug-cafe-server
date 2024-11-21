@@ -10,6 +10,7 @@ export const INVALID = {
   CPF: 'CPF inválido',
   CREDIT_CARD: 'Cartão inválido',
   EXPIRATION_DATE: 'A data deve ser no formato Mês/Ano',
+  NUMBER: 'Número inválido',
   ONLY_NUMBERS: 'Apenas números são permitidos',
 };
 

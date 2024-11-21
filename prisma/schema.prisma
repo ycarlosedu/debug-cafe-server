@@ -22,18 +22,19 @@ model Address {
   userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  fullName  String
-  phone     String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  address   Address?
+  id         String       @id @default(cuid())
+  email      String       @unique
+  fullName   String
+  phone      String
+  password   String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  address    Address?
+  creditCard CreditCard[]
 }
 
 model ProductCategory {
@@ -61,8 +62,20 @@ model CategoriesOnProducts {
   productCategoryId String
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  Product           Product         @relation(fields: [productId], references: [id])
-  ProductCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
+  product           Product         @relation(fields: [productId], references: [id])
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
 
   @@id([productId, productCategoryId])
+}
+
+model CreditCard {
+  id             String   @id @default(cuid())
+  cardNumber     String
+  cpf            String
+  cvv            String
+  expirationDate String
+  userId         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id])
 }

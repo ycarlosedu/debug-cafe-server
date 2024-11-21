@@ -38,7 +38,7 @@ export class ProductService {
             },
           },
           create: categories.map((category) => ({
-            ProductCategory: {
+            productCategory: {
               connect: {
                 id: category,
               },

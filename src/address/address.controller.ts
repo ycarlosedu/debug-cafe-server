@@ -16,7 +16,7 @@ export class AddressController {
   ) {
     this.addressService.createAddress({
       ...addressData,
-      User: {
+      user: {
         connect: {
           id: userSession.id,
         },
