@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { CategoryController } from './category.controller';
-import { CategoryService } from './category.service';
+import { ProductController } from './product.controller';
+import { ProductService } from './product.service';
 import { PrismaService } from 'src/database/prisma.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Module({
-  controllers: [CategoryController],
+  controllers: [ProductController],
   providers: [
-    CategoryService,
+    ProductService,
     PrismaService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
   ],
-  exports: [CategoryService],
+  exports: [ProductService],
 })
-export class CategoryModule {}
+export class ProductModule {}
