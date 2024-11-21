@@ -18,7 +18,7 @@ export const signUpSchema = z
     phone: z
       .string()
       .min(1, REQUIRED.FIELD)
-      .regex(new RegExp(REGEX.ONLY_NUMBERS), INVALID.PHONE),
+      .regex(new RegExp(REGEX.ONLY_NUMBERS), INVALID.ONLY_NUMBERS),
     password: z
       .string()
       .min(1, REQUIRED.FIELD)

@@ -8,7 +8,7 @@ export const updateUserSchema = z
     phone: z
       .string()
       .min(1, REQUIRED.FIELD)
-      .regex(new RegExp(REGEX.ONLY_NUMBERS), INVALID.PHONE),
+      .regex(new RegExp(REGEX.ONLY_NUMBERS), INVALID.ONLY_NUMBERS),
   })
   .required();
 
