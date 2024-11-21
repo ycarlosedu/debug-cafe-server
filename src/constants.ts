@@ -21,4 +21,8 @@ export const REQUIRED = {
 
 export const ERROR = {
   GENERIC: 'Erro inesperado, tente novamente mais tarde!',
+  UNAUTHORIZED: 'Não autorizado',
+  NOT_FOUND: 'Não encontrado',
+  EMAIL_ALREADY_EXISTS: 'Email já existe',
+  INVALID_CREDENTIALS: 'Credenciais inválidas',
 };

@@ -9,11 +9,6 @@ export const updateUserSchema = z
       .string()
       .min(1, REQUIRED.FIELD)
       .regex(new RegExp(REGEX.ONLY_NUMBERS), INVALID.PHONE),
-    password: z
-      .string()
-      .min(1, REQUIRED.FIELD)
-      .min(8, REQUIRED.MIN(8))
-      .max(20, REQUIRED.MAX(20)),
   })
   .required();
 

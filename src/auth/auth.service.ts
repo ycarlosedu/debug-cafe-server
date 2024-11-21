@@ -3,6 +3,8 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignUpDto, UserToken } from './auth.dto';
 import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+import { ERROR } from 'src/constants';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +20,9 @@ export class AuthService {
 
   async signIn({ email, password }: SignInDto): Promise<any> {
     const user = await this.usersService.findOne({ where: { email } });
-    if (user?.password !== password) {
-      throw new UnauthorizedException();
+    const isMatch = await bcrypt.compare(password, user?.password || '');
+    if (!user || !isMatch) {
+      throw new UnauthorizedException(ERROR.INVALID_CREDENTIALS);
     }
 
     return {
@@ -35,12 +38,14 @@ export class AuthService {
   async signUp({ email, fullName, phone, password }: SignUpDto): Promise<any> {
     const user = await this.usersService.findOne({ where: { email } });
     if (user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(ERROR.EMAIL_ALREADY_EXISTS);
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const userCreated = await this.usersService.createUser({
       email,
-      password,
+      password: hashedPassword,
       fullName,
       phone,
     });
