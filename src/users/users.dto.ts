@@ -2,10 +2,9 @@ import { INVALID, REQUIRED } from 'src/constants';
 import { REGEX } from 'src/utils/regex';
 import { z } from 'zod';
 
-export const createUserSchema = z
+export const updateUserSchema = z
   .object({
     fullName: z.string().min(1, REQUIRED.FIELD).min(10, REQUIRED.MIN(10)),
-    email: z.string().min(1, REQUIRED.FIELD).email(INVALID.EMAIL),
     phone: z
       .string()
       .min(1, REQUIRED.FIELD)
@@ -18,4 +17,4 @@ export const createUserSchema = z
   })
   .required();
 
-export type CreateUserDto = z.infer<typeof createUserSchema>;
+export type UpdateUserDto = z.infer<typeof updateUserSchema>;

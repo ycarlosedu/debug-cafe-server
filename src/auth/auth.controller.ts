@@ -9,8 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { Public } from 'src/constants';
 import { ZodValidationPipe } from 'src/pipes/zodValidation';
-import { CreateUserDto, createUserSchema } from 'src/users/users.dto';
-import { SignInDto, signInSchema } from './auth.dto';
+import { SignInDto, signInSchema, SignUpDto, signUpSchema } from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -25,13 +24,13 @@ export class AuthController {
   }
 
   @Public()
-  @UsePipes(new ZodValidationPipe(createUserSchema))
+  @UsePipes(new ZodValidationPipe(signUpSchema))
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   signUp(
     @Body()
-    createUserDto: CreateUserDto,
+    signUpDto: SignUpDto,
   ) {
-    return this.authService.signUp(createUserDto);
+    return this.authService.signUp(signUpDto);
   }
 }

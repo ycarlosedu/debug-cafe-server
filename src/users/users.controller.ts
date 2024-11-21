@@ -1,6 +1,9 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Put, Session, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '@prisma/client';
+import { ZodValidationPipe } from 'src/pipes/zodValidation';
+import { UpdateUserDto, updateUserSchema } from './users.dto';
+import { UserToken } from 'src/auth/auth.dto';
 
 @Controller('users')
 export class UsersController {
@@ -11,15 +14,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Post()
-  updateUser(userData: {
-    email: string;
-    fullName: string;
-    phone: string;
-    password: string;
-  }): Promise<User> {
+  @UsePipes(new ZodValidationPipe(updateUserSchema))
+  @Put()
+  updateUser(
+    @Body() userData: UpdateUserDto,
+    @Session() userSession: UserToken,
+  ): Promise<User> {
     return this.usersService.updateUser({
-      where: { email: userData.email },
+      where: { id: userSession.id },
       data: {
         fullName: userData.fullName,
         phone: userData.phone,
