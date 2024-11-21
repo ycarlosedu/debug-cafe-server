@@ -34,3 +34,34 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model ProductCategory {
+  id        String                 @id @default(cuid())
+  name      String
+  image     String
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  products  CategoriesOnProducts[]
+}
+
+model Product {
+  id          String                 @id @default(cuid())
+  name        String
+  price       Float
+  description String
+  image       String
+  categories  CategoriesOnProducts[]
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+}
+
+model CategoriesOnProducts {
+  productId         String
+  productCategoryId String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  Product           Product         @relation(fields: [productId], references: [id])
+  ProductCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
+
+  @@id([productId, productCategoryId])
+}
