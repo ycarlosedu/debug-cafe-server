@@ -78,4 +78,30 @@ export class ProductService {
   async findAll(): Promise<Product[]> {
     return this.prisma.product.findMany();
   }
+
+  async findByOrder(params: { orderId: string }) {
+    const { orderId } = params;
+    return this.prisma.product.findMany({
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        productsOnOrder: {
+          select: {
+            quantity: true,
+          },
+          where: {
+            orderId,
+          },
+        },
+      },
+      where: {
+        productsOnOrder: {
+          some: {
+            orderId,
+          },
+        },
+      },
+    });
+  }
 }

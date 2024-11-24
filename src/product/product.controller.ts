@@ -15,16 +15,19 @@ import {
   updateProductSchema,
 } from './product.dto';
 import { ProductService } from './product.service';
+import { Public } from 'src/constants';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Public()
   @Get()
   getAllProducts() {
     return this.productService.findAll();
   }
 
+  @Public()
   @Get('/:id')
   getProductById(@Param('id') id: string) {
     return this.productService.findOne({

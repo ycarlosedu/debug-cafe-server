@@ -34,8 +34,15 @@ export class CreditCardService {
     });
   }
 
-  async findAll(): Promise<CreditCard[]> {
-    return this.prisma.creditCard.findMany();
+  async findAll(params: {
+    where: Prisma.CreditCardWhereInput;
+    select?: Prisma.CreditCardSelect;
+  }): Promise<CreditCard[]> {
+    const { where, select } = params;
+    return this.prisma.creditCard.findMany({
+      where,
+      select,
+    });
   }
 
   async deleteCreditCard(

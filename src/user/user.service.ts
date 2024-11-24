@@ -25,10 +25,12 @@ export class UsersService {
 
   async findOne(params: {
     where: Prisma.UserWhereUniqueInput;
+    select?: Prisma.UserSelect;
   }): Promise<User | null> {
-    const { where } = params;
+    const { where, select } = params;
     return this.prisma.user.findUnique({
       where,
+      select,
     });
   }
 

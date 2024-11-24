@@ -1,10 +1,18 @@
-import { Body, Controller, Post, Put, Session, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Session,
+  UsePipes,
+} from '@nestjs/common';
 import { ZodValidationPipe } from 'src/pipes/zodValidation';
 import { UserToken } from 'src/auth/auth.dto';
 import { UpdateAddressDto, updateAddressSchema } from './address.dto';
 import { AddressService } from './address.service';
 
-@Controller('address')
+@Controller('addresses')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
@@ -29,7 +37,7 @@ export class AddressController {
   }
 
   @UsePipes(new ZodValidationPipe(updateAddressSchema))
-  @Put()
+  @Put('/me')
   updateAddress(
     @Body() addressData: UpdateAddressDto,
     @Session() userSession: UserToken,
@@ -43,5 +51,19 @@ export class AddressController {
       address: addressData,
       message: 'Endereço atualizado com sucesso!',
     };
+  }
+
+  @Get('/me')
+  getMyAddress(@Session() userSession: UserToken) {
+    return this.addressService.findOne({
+      where: { userId: userSession.id },
+      select: {
+        id: true,
+        street: true,
+        number: true,
+        city: true,
+        cep: true,
+      },
+    });
   }
 }

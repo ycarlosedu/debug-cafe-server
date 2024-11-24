@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Put, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UsePipes,
+} from '@nestjs/common';
 import { ZodValidationPipe } from 'src/pipes/zodValidation';
 import {
   CreateCategoryDto,
@@ -8,13 +16,20 @@ import {
 } from './category.dto';
 import { CategoryService } from './category.service';
 
-@Controller('category')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
   getAllCategories() {
     return this.categoryService.findAll();
+  }
+
+  @Get('/:id')
+  getCategoryById(@Param('id') id: string) {
+    return this.categoryService.findOne({
+      where: { id },
+    });
   }
 
   @Post()

@@ -25,13 +25,26 @@ export class CategoryService {
     });
   }
 
-  async findOne(params: {
-    where: Prisma.ProductCategoryWhereUniqueInput;
-  }): Promise<ProductCategory | null> {
+  async findOne(params: { where: Prisma.ProductCategoryWhereUniqueInput }) {
     const { where } = params;
-    return this.prisma.productCategory.findUnique({
+    const products = await this.prisma.product.findMany({
+      where: {
+        categories: {
+          some: {
+            productCategoryId: where.id,
+          },
+        },
+      },
+    });
+
+    const category = await this.prisma.productCategory.findUnique({
       where,
     });
+
+    return {
+      ...category,
+      products,
+    };
   }
 
   async findAll(): Promise<ProductCategory[]> {

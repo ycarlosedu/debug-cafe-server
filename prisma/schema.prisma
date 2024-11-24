@@ -23,6 +23,7 @@ model Address {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
+  order     Order[]
 }
 
 model User {
@@ -35,6 +36,7 @@ model User {
   updatedAt  DateTime     @updatedAt
   address    Address?
   creditCard CreditCard[]
+  order      Order[]
 }
 
 model ProductCategory {
@@ -47,14 +49,15 @@ model ProductCategory {
 }
 
 model Product {
-  id          String                 @id @default(cuid())
-  name        String
-  price       Float
-  description String
-  image       String
-  categories  CategoriesOnProducts[]
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
+  id              String                 @id @default(cuid())
+  name            String
+  price           Float
+  description     String
+  image           String
+  categories      CategoriesOnProducts[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  productsOnOrder ProductsOnOrder[]
 }
 
 model CategoriesOnProducts {
@@ -78,4 +81,40 @@ model CreditCard {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   user           User     @relation(fields: [userId], references: [id])
+
+  @@unique([cardNumber, userId])
+}
+
+model ProductsOnOrder {
+  productId String
+  orderId   String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
+
+  @@id([productId, orderId])
+}
+
+enum ORDER_STATUS {
+  PENDING
+  IN_PREPARATION
+  ON_THE_WAY
+  DELIVERED
+  CANCELED
+}
+
+model Order {
+  id              String            @id @default(cuid())
+  status          ORDER_STATUS      @default(PENDING)
+  totalPrice      Float
+  paymentMethod   String
+  userId          String
+  addressId       String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  user            User              @relation(fields: [userId], references: [id])
+  address         Address           @relation(fields: [addressId], references: [id])
+  productsOnOrder ProductsOnOrder[]
 }

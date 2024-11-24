@@ -1,5 +1,5 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignUpDto, UserToken } from './auth.dto';
 import { User } from '@prisma/client';
@@ -32,9 +32,9 @@ export class AuthService {
 
     return {
       user: {
-        id: user.id,
         email: user.email,
         fullName: user.fullName,
+        phone: user.phone,
       },
       token: await this.createToken(user),
     };
@@ -59,9 +59,9 @@ export class AuthService {
     this.logger.log('Cadastro realizado com sucesso para o usuário: ' + email);
     return {
       user: {
-        id: userCreated.id,
         email: userCreated.email,
         fullName: userCreated.fullName,
+        phone: userCreated.phone,
       },
       token: await this.createToken(userCreated),
     };

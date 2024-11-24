@@ -25,10 +25,12 @@ export class AddressService {
 
   async findOne(params: {
     where: Prisma.AddressWhereUniqueInput;
+    select?: Prisma.AddressSelect;
   }): Promise<Address | null> {
-    const { where } = params;
+    const { where, select } = params;
     return this.prisma.address.findUnique({
       where,
+      select,
     });
   }
 
