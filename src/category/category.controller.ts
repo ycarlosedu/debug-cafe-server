@@ -15,16 +15,19 @@ import {
   updateCategorySchema,
 } from './category.dto';
 import { CategoryService } from './category.service';
+import { Public } from 'src/constants';
 
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @Public()
   @Get()
   getAllCategories() {
     return this.categoryService.findAll();
   }
 
+  @Public()
   @Get('/:id')
   getCategoryById(@Param('id') id: string) {
     return this.categoryService.findOne({

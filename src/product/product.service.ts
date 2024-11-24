@@ -75,8 +75,15 @@ export class ProductService {
     };
   }
 
-  async findAll(): Promise<Product[]> {
-    return this.prisma.product.findMany();
+  async findAll(
+    params: {
+      where?: Prisma.ProductWhereInput;
+    } = {},
+  ): Promise<Product[]> {
+    const { where } = params;
+    return this.prisma.product.findMany({
+      where,
+    });
   }
 
   async findByOrder(params: { orderId: string }) {

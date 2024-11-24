@@ -11,6 +11,8 @@ import { ZodValidationPipe } from 'src/pipes/zodValidation';
 import {
   CreateProductDto,
   createProductSchema,
+  SearchProductDto,
+  searchProductSchema,
   UpdateProductDto,
   updateProductSchema,
 } from './product.dto';
@@ -32,6 +34,29 @@ export class ProductController {
   getProductById(@Param('id') id: string) {
     return this.productService.findOne({
       where: { id },
+    });
+  }
+
+  @Public()
+  @Post('/search')
+  @UsePipes(new ZodValidationPipe(searchProductSchema))
+  getProductByName(@Body() search: SearchProductDto) {
+    return this.productService.findAll({
+      where: {
+        AND: {
+          name: { contains: search.name },
+          categories: {
+            some: {
+              productCategoryId: { equals: search.category },
+            },
+          },
+        },
+        OR: [
+          {
+            name: { contains: search.name },
+          },
+        ],
+      },
     });
   }
 

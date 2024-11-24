@@ -25,3 +25,14 @@ export const updateProductSchema = z
   .required();
 
 export type UpdateProductDto = z.infer<typeof updateProductSchema>;
+
+export const searchProductSchema = z
+  .object({
+    name: z.string().min(1, REQUIRED.FIELD).max(255, REQUIRED.MAX(255)),
+    category: z.string().optional(),
+  })
+  .required({
+    name: true,
+  });
+
+export type SearchProductDto = z.infer<typeof searchProductSchema>;
