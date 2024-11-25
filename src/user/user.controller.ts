@@ -39,6 +39,7 @@ export class UsersController {
         email: user.email,
         fullName: user.fullName,
         phone: user.phone,
+        userType: user.userType,
       },
       message: 'Usuário atualizado com sucesso!',
     };

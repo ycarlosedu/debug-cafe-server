@@ -1,21 +1,32 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { SignInDto, SignUpDto, UserToken } from './auth.dto';
+import { ChangeUserTypeDto, SignInDto, SignUpDto, UserToken } from './auth.dto';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { ERROR } from 'src/constants';
+import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private prisma: PrismaService,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
   private readonly logger = new Logger(AuthService.name);
 
   async createToken(user: User): Promise<string> {
-    const payload: UserToken = { id: user.id, email: user.email };
+    const payload: UserToken = {
+      id: user.id,
+      email: user.email,
+      userType: user.userType,
+    };
     return this.jwtService.signAsync(payload);
   }
 
@@ -35,6 +46,7 @@ export class AuthService {
         email: user.email,
         fullName: user.fullName,
         phone: user.phone,
+        userType: user.userType,
       },
       token: await this.createToken(user),
     };
@@ -62,8 +74,41 @@ export class AuthService {
         email: userCreated.email,
         fullName: userCreated.fullName,
         phone: userCreated.phone,
+        userType: userCreated.userType,
       },
       token: await this.createToken(userCreated),
+    };
+  }
+
+  async changeUserType(
+    { userType, password }: ChangeUserTypeDto,
+    { id }: UserToken,
+  ): Promise<any> {
+    const userTypeRequested = await this.prisma.userTypePasswords.findUnique({
+      where: { userType },
+    });
+    if (!userTypeRequested) {
+      throw new BadRequestException(ERROR.INVALID_CREDENTIALS);
+    }
+
+    const isMatch = await bcrypt.compare(password, userTypeRequested.password);
+    if (!isMatch) {
+      throw new BadRequestException(ERROR.INVALID_CREDENTIALS);
+    }
+
+    const userUpdated = await this.usersService.updateUser({
+      where: { id },
+      data: { userType },
+    });
+
+    return {
+      user: {
+        email: userUpdated.email,
+        fullName: userUpdated.fullName,
+        phone: userUpdated.phone,
+        userType: userUpdated.userType,
+      },
+      token: await this.createToken(userUpdated),
     };
   }
 }

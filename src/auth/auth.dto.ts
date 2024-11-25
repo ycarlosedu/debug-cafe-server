@@ -1,3 +1,4 @@
+import { USER_TYPE } from '@prisma/client';
 import { INVALID, REQUIRED } from 'src/constants';
 import { REGEX } from 'src/utils/regex';
 import { z } from 'zod';
@@ -32,4 +33,16 @@ export type SignUpDto = z.infer<typeof signUpSchema>;
 export type UserToken = {
   id: string;
   email: string;
+  userType: USER_TYPE;
 };
+
+export const changeUserTypeSchema = z
+  .object({
+    userType: z.nativeEnum(USER_TYPE, {
+      message: INVALID.USER_TYPE,
+    }),
+    password: z.string().min(1, REQUIRED.FIELD),
+  })
+  .required();
+
+export type ChangeUserTypeDto = z.infer<typeof changeUserTypeSchema>;

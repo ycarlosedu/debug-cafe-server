@@ -26,12 +26,20 @@ model Address {
   order     Order[]
 }
 
+enum USER_TYPE {
+  CLIENT
+  STAFF
+  MANAGER
+  DELIVERY
+}
+
 model User {
   id         String       @id @default(cuid())
   email      String       @unique
   fullName   String
   phone      String
   password   String
+  userType   USER_TYPE    @default(CLIENT)
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   address    Address?
@@ -117,4 +125,11 @@ model Order {
   user            User              @relation(fields: [userId], references: [id])
   address         Address           @relation(fields: [addressId], references: [id])
   productsOnOrder ProductsOnOrder[]
+}
+
+model UserTypePasswords {
+  userType  USER_TYPE @id @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }

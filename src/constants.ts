@@ -12,6 +12,7 @@ export const INVALID = {
   EXPIRATION_DATE: 'A data deve ser no formato Mês/Ano',
   NUMBER: 'Número inválido',
   ONLY_NUMBERS: 'Apenas números são permitidos',
+  USER_TYPE: 'Tipo de usuário inválido',
 };
 
 export const REQUIRED = {

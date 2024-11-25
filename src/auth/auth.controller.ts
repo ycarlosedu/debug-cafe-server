@@ -5,11 +5,20 @@ import {
   HttpCode,
   HttpStatus,
   UsePipes,
+  Session,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/constants';
 import { ZodValidationPipe } from 'src/pipes/zodValidation';
-import { SignInDto, signInSchema, SignUpDto, signUpSchema } from './auth.dto';
+import {
+  ChangeUserTypeDto,
+  changeUserTypeSchema,
+  SignInDto,
+  signInSchema,
+  SignUpDto,
+  signUpSchema,
+  UserToken,
+} from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -32,5 +41,15 @@ export class AuthController {
     signUpDto: SignUpDto,
   ) {
     return this.authService.signUp(signUpDto);
+  }
+
+  @UsePipes(new ZodValidationPipe(changeUserTypeSchema))
+  @Post('change-user-type')
+  changeUserType(
+    @Body()
+    changeUserTypeDto: ChangeUserTypeDto,
+    @Session() userSession: UserToken,
+  ) {
+    return this.authService.changeUserType(changeUserTypeDto, userSession);
   }
 }
