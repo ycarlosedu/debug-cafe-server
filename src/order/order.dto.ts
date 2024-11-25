@@ -17,11 +17,3 @@ export const createOrderSchema = z
   .required();
 
 export type CreateOrderDto = z.infer<typeof createOrderSchema>;
-
-export enum ORDER_STATUS {
-  PENDING = 'pending',
-  IN_PREPARATION = 'in_preparation',
-  ON_THE_WAY = 'on_the_way',
-  DELIVERED = 'delivered',
-  CANCELED = 'canceled',
-}

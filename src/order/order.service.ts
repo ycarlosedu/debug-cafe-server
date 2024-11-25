@@ -66,4 +66,15 @@ export class OrderService {
       },
     });
   }
+
+  async updateOrder(params: {
+    where: Prisma.OrderWhereUniqueInput;
+    data: Prisma.OrderUpdateInput;
+  }) {
+    const { where, data } = params;
+    return this.prisma.order.update({
+      where,
+      data,
+    });
+  }
 }
