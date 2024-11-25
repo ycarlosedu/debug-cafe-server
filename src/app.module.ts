@@ -6,6 +6,7 @@ import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { CreditCardModule } from './credit-card/credit-card.module';
 import { OrderModule } from './order/order.module';
+import { OrderFeedbackModule } from './order-feedback/order-feedback.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OrderModule } from './order/order.module';
     ProductModule,
     CreditCardModule,
     OrderModule,
+    OrderFeedbackModule,
   ],
   providers: [],
 })

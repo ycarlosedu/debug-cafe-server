@@ -16,6 +16,7 @@ import { OrderService } from './order.service';
 import { UserToken } from 'src/auth/auth.dto';
 import { ProductService } from 'src/product/product.service';
 import { ORDER_STATUS, USER_TYPE } from '@prisma/client';
+import { OrderFeedbackService } from 'src/order-feedback/order-feedback.service';
 
 const ORDERS_USER_TYPE = {
   [USER_TYPE.STAFF]: [ORDER_STATUS.PENDING, ORDER_STATUS.IN_PREPARATION],
@@ -39,6 +40,7 @@ export class OrderController {
   constructor(
     private readonly orderService: OrderService,
     private productService: ProductService,
+    private orderFeedbackService: OrderFeedbackService,
   ) {}
 
   @Get('/pending')
@@ -228,12 +230,15 @@ export class OrderController {
       },
     });
 
+    const feedback = await this.orderFeedbackService.getOrderFeedback(id);
+
     const products = await this.productService.findByOrder({
       orderId: id,
     });
 
     return {
       ...order,
+      feedback,
       products: products.map((product) => ({
         id: product.id,
         name: product.name,

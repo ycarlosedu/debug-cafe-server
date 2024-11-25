@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from 'src/constants';
+import { ERROR, IS_PUBLIC_KEY } from 'src/constants';
 import { UserToken } from './auth.dto';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(ERROR.UNAUTHORIZED);
     }
     try {
       const payload: UserToken = await this.jwtService.verifyAsync(token, {
@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate {
       });
       request.session = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(ERROR.UNAUTHORIZED);
     }
     return true;
   }
