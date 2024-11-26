@@ -18,11 +18,11 @@ export class AddressController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(updateAddressSchema))
-  createAddress(
+  async createAddress(
     @Body() addressData: UpdateAddressDto,
     @Session() userSession: UserToken,
   ) {
-    this.addressService.createAddress({
+    const address = await this.addressService.createAddress({
       ...addressData,
       user: {
         connect: {
@@ -32,23 +32,23 @@ export class AddressController {
     });
 
     return {
-      address: addressData,
+      address,
     };
   }
 
   @UsePipes(new ZodValidationPipe(updateAddressSchema))
   @Put('/me')
-  updateAddress(
+  async updateAddress(
     @Body() addressData: UpdateAddressDto,
     @Session() userSession: UserToken,
   ) {
-    this.addressService.updateAddress({
+    const address = await this.addressService.updateAddress({
       where: { userId: userSession.id },
       data: addressData,
     });
 
     return {
-      address: addressData,
+      address,
       message: 'Endereço atualizado com sucesso!',
     };
   }
