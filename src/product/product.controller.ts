@@ -62,24 +62,25 @@ export class ProductController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(createProductSchema))
-  createProduct(@Body() productData: CreateProductDto) {
-    this.productService.createProduct(productData);
+  async createProduct(@Body() productData: CreateProductDto) {
+    const product = await this.productService.createProduct(productData);
 
     return {
-      product: productData,
+      product,
+      message: 'Produto criado com sucesso!',
     };
   }
 
   @UsePipes(new ZodValidationPipe(updateProductSchema))
   @Put()
-  updateProduct(@Body() productData: UpdateProductDto) {
-    this.productService.updateProduct({
+  async updateProduct(@Body() productData: UpdateProductDto) {
+    const product = await this.productService.updateProduct({
       where: { id: productData.id },
       data: productData,
     });
 
     return {
-      product: productData,
+      product,
       message: 'Produto atualizado com sucesso!',
     };
   }

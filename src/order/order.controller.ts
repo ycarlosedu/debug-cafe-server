@@ -169,6 +169,14 @@ export class OrderController {
       },
     });
 
+    if (order?.status === ORDER_STATUS.DELIVERED) {
+      throw new BadRequestException('Pedido entregue não pode ser cancelado!');
+    }
+
+    if (order?.status === ORDER_STATUS.CANCELED) {
+      throw new BadRequestException('Pedido já está cancelado!');
+    }
+
     if (!order) {
       throw new BadRequestException('Pedido não encontrado!');
     }
@@ -233,6 +241,14 @@ export class OrderController {
           select: {
             street: true,
             number: true,
+          },
+        },
+        feedback: {
+          select: {
+            comment: true,
+            stars: true,
+            deliveryComment: true,
+            deliveryStars: true,
           },
         },
       },

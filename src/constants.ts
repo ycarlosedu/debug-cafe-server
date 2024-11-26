@@ -18,6 +18,7 @@ export const INVALID = {
   ONLY_NUMBERS: 'Apenas números são permitidos',
   USER_TYPE: 'Tipo de usuário inválido',
   RATING: 'A avaliação deve ser de 1 à 5',
+  URL: 'URL inválida',
 };
 
 export const REQUIRED = {

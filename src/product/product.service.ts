@@ -7,10 +7,10 @@ import { CreateProductDto, UpdateProductDto } from './product.dto';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
-  async createProduct(data: CreateProductDto): Promise<Product> {
+  async createProduct(data: CreateProductDto) {
     const { categories, ...product } = data;
 
-    return this.prisma.product.create({
+    const productCreated = await this.prisma.product.create({
       data: {
         ...product,
         categories: {
@@ -20,21 +20,40 @@ export class ProductService {
         },
       },
     });
+
+    const categoriesOnProduct = await this.prisma.productCategory.findMany({
+      select: {
+        name: true,
+        id: true,
+      },
+      where: {
+        products: {
+          some: {
+            productId: productCreated.id,
+          },
+        },
+      },
+    });
+
+    return {
+      ...productCreated,
+      categories: categoriesOnProduct,
+    };
   }
 
   async updateProduct(params: {
     where: Prisma.ProductWhereUniqueInput;
     data: UpdateProductDto;
-  }): Promise<Product> {
+  }) {
     const { where, data } = params;
     const { categories, ...product } = data;
-    return this.prisma.product.update({
+    const productCreated = await this.prisma.product.update({
       data: {
         ...product,
         categories: {
           deleteMany: {
             productCategoryId: {
-              notIn: categories,
+              in: categories,
             },
           },
           create: categories.map((category) => ({
@@ -48,6 +67,25 @@ export class ProductService {
       },
       where,
     });
+
+    const categoriesOnProduct = await this.prisma.productCategory.findMany({
+      select: {
+        name: true,
+        id: true,
+      },
+      where: {
+        products: {
+          some: {
+            productId: productCreated.id,
+          },
+        },
+      },
+    });
+
+    return {
+      ...productCreated,
+      categories: categoriesOnProduct,
+    };
   }
 
   async findOne(params: { where: Prisma.ProductWhereUniqueInput }) {
@@ -55,6 +93,7 @@ export class ProductService {
     const categories = await this.prisma.productCategory.findMany({
       select: {
         name: true,
+        id: true,
       },
       where: {
         products: {
@@ -71,7 +110,7 @@ export class ProductService {
 
     return {
       ...product,
-      categories: categories.map((category) => category.name),
+      categories,
     };
   }
 

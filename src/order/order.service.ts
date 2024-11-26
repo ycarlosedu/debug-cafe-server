@@ -24,10 +24,7 @@ export class OrderService {
       return acc + productData.quantity * product.price;
     }, 0);
 
-    return this.prisma.order.create({
-      select: {
-        id: true,
-      },
+    return await this.prisma.order.create({
       data: {
         ...order,
         totalPrice,
@@ -37,6 +34,19 @@ export class OrderService {
             productId: id,
             quantity,
           })),
+        },
+      },
+      select: {
+        id: true,
+        totalPrice: true,
+        createdAt: true,
+        status: true,
+        paymentMethod: true,
+        address: {
+          select: {
+            street: true,
+            number: true,
+          },
         },
       },
     });

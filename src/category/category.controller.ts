@@ -37,11 +37,12 @@ export class CategoryController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(createCategorySchema))
-  createCategory(@Body() categoryData: CreateCategoryDto) {
-    this.categoryService.createCategory(categoryData);
+  async createCategory(@Body() categoryData: CreateCategoryDto) {
+    const category = await this.categoryService.createCategory(categoryData);
 
     return {
-      category: categoryData,
+      category,
+      message: 'Categoria adicionada com sucesso!',
     };
   }
 

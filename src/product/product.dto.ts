@@ -1,10 +1,10 @@
-import { REQUIRED } from 'src/constants';
+import { INVALID, REQUIRED } from 'src/constants';
 import { z } from 'zod';
 
 export const createProductSchema = z
   .object({
     name: z.string().min(1, REQUIRED.FIELD).max(255, REQUIRED.MAX(255)),
-    image: z.string().min(1, REQUIRED.FIELD),
+    image: z.string().min(1, REQUIRED.FIELD).url(INVALID.URL),
     price: z.number().min(0, REQUIRED.MIN(0)).max(9999, REQUIRED.MAX(9999)),
     description: z.string().min(1, REQUIRED.FIELD).max(255, REQUIRED.MAX(255)),
     categories: z.array(z.string().cuid()).min(1, REQUIRED.MIN(1)),
