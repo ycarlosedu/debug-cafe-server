@@ -9,10 +9,10 @@ export class OrderFeedbackService {
   async createOrderFeedback(feedback: CreateOrderFeedbackDto, orderId: string) {
     return this.prisma.orderFeedback.create({
       data: {
-        feedbackComment: feedback.feedbackComment,
-        feedbackStars: feedback.feedbackStars,
-        deliveryFeedbackComment: feedback.deliveryFeedbackComment,
-        deliveryFeedbackStars: feedback.deliveryFeedbackStars,
+        comment: feedback.comment,
+        stars: feedback.stars,
+        deliveryComment: feedback.deliveryComment,
+        deliveryStars: feedback.deliveryStars,
         order: {
           connect: {
             id: orderId,
@@ -26,6 +26,12 @@ export class OrderFeedbackService {
     return this.prisma.orderFeedback.findUnique({
       where: {
         orderId,
+      },
+      select: {
+        comment: true,
+        stars: true,
+        deliveryComment: true,
+        deliveryStars: true,
       },
     });
   }

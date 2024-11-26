@@ -204,6 +204,14 @@ export class OrderController {
             number: true,
           },
         },
+        feedback: {
+          select: {
+            comment: true,
+            stars: true,
+            deliveryComment: true,
+            deliveryStars: true,
+          },
+        },
       },
     });
   }

@@ -125,18 +125,18 @@ model Order {
   user            User              @relation(fields: [userId], references: [id])
   address         Address           @relation(fields: [addressId], references: [id])
   productsOnOrder ProductsOnOrder[]
-  orderFeedback   OrderFeedback?
+  feedback        OrderFeedback?
 }
 
 model OrderFeedback {
-  orderId                 String   @id @unique
-  feedbackComment         String
-  feedbackStars           Int
-  deliveryFeedbackComment String
-  deliveryFeedbackStars   Int
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-  order                   Order    @relation(fields: [orderId], references: [id])
+  orderId         String   @id @unique
+  comment         String
+  stars           Int
+  deliveryComment String
+  deliveryStars   Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  order           Order    @relation(fields: [orderId], references: [id])
 }
 
 model UserTypePasswords {
