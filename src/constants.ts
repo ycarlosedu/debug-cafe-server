@@ -3,6 +3,10 @@ import { SetMetadata } from '@nestjs/common';
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
+export const IS_AVAILABLE_TO_GUEST_KEY = 'isAvailableToGuest';
+export const AvailableToGuest = () =>
+  SetMetadata(IS_AVAILABLE_TO_GUEST_KEY, true);
+
 export const INVALID = {
   EMAIL: 'Email inválido',
   PHONE: 'Telefone inválido',
@@ -26,6 +30,7 @@ export const REQUIRED = {
 export const ERROR = {
   GENERIC: 'Erro inesperado, tente novamente mais tarde!',
   UNAUTHORIZED: 'Não autorizado',
+  NOT_AVAILABLE_TO_GUEST: 'Não disponível para usuário convidado',
   NOT_FOUND: 'Não encontrado',
   EMAIL_ALREADY_EXISTS: 'Email já existe',
   INVALID_CREDENTIALS: 'Credenciais inválidas',

@@ -7,7 +7,7 @@ import {
 import { UsersService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ChangeUserTypeDto, SignInDto, SignUpDto, UserToken } from './auth.dto';
-import { User } from '@prisma/client';
+import { User, USER_TYPE } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { ERROR } from 'src/constants';
 import { PrismaService } from 'src/database/prisma.service';
@@ -77,6 +77,19 @@ export class AuthService {
         userType: userCreated.userType,
       },
       token: await this.createToken(userCreated),
+    };
+  }
+
+  async createGuest() {
+    const user = {
+      email: 'convidado@debug.cafe',
+      fullName: 'Convidado',
+      phone: '',
+      userType: USER_TYPE.GUEST,
+    } as User;
+    return {
+      user,
+      token: await this.createToken(user),
     };
   }
 

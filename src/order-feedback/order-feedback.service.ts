@@ -19,6 +19,12 @@ export class OrderFeedbackService {
           },
         },
       },
+      select: {
+        comment: true,
+        stars: true,
+        deliveryComment: true,
+        deliveryStars: true,
+      },
     });
   }
 

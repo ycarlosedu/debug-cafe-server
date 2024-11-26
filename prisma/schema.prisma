@@ -27,6 +27,7 @@ model Address {
 }
 
 enum USER_TYPE {
+  GUEST
   CLIENT
   STAFF
   MANAGER

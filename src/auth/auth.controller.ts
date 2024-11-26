@@ -43,6 +43,13 @@ export class AuthController {
     return this.authService.signUp(signUpDto);
   }
 
+  @Public()
+  @Post('guest')
+  @HttpCode(HttpStatus.CREATED)
+  createGuest() {
+    return this.authService.createGuest();
+  }
+
   @UsePipes(new ZodValidationPipe(changeUserTypeSchema))
   @Post('change-user-type')
   changeUserType(
