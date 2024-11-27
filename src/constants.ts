@@ -1,4 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
+import { USER_TYPE } from '@prisma/client';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -6,6 +7,19 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 export const IS_AVAILABLE_TO_GUEST_KEY = 'isAvailableToGuest';
 export const AvailableToGuest = () =>
   SetMetadata(IS_AVAILABLE_TO_GUEST_KEY, true);
+
+export const ONLY_TEAM_MEMBER_KEY = 'onlyTeamMember';
+export const OnlyTeamMember = () => SetMetadata(ONLY_TEAM_MEMBER_KEY, true);
+
+export const ONLY_MANAGER_KEY = 'onlyManager';
+export const OnlyManager = () => SetMetadata(ONLY_MANAGER_KEY, true);
+
+export const isTeamMember = (userType: USER_TYPE) => {
+  if (!userType) return false;
+  if (userType === USER_TYPE.GUEST || userType === USER_TYPE.CLIENT)
+    return false;
+  return true;
+};
 
 export const INVALID = {
   EMAIL: 'Email inválido',
@@ -32,6 +46,8 @@ export const ERROR = {
   GENERIC: 'Erro inesperado, tente novamente mais tarde!',
   UNAUTHORIZED: 'Não autorizado',
   NOT_AVAILABLE_TO_GUEST: 'Não disponível para usuário convidado',
+  ONLY_FOR_TEAM_MEMBER: 'Apenas membros da equipe podem acessar',
+  ONLY_FOR_MANAGER: 'Apenas supervisores podem acessar',
   NOT_FOUND: 'Não encontrado',
   EMAIL_ALREADY_EXISTS: 'Email já existe',
   INVALID_CREDENTIALS: 'Credenciais inválidas',

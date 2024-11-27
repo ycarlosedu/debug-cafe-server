@@ -9,7 +9,14 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { ERROR, IS_AVAILABLE_TO_GUEST_KEY, IS_PUBLIC_KEY } from 'src/constants';
+import {
+  ERROR,
+  IS_AVAILABLE_TO_GUEST_KEY,
+  IS_PUBLIC_KEY,
+  isTeamMember,
+  ONLY_MANAGER_KEY,
+  ONLY_TEAM_MEMBER_KEY,
+} from 'src/constants';
 import { UserToken } from './auth.dto';
 import { USER_TYPE } from '@prisma/client';
 
@@ -36,6 +43,16 @@ export class AuthGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
 
+    const isOnlyForTeamMembers = this.reflector.getAllAndOverride<boolean>(
+      ONLY_TEAM_MEMBER_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    const isOnlyForManagers = this.reflector.getAllAndOverride<boolean>(
+      ONLY_MANAGER_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
     const payload: UserToken = await this.jwtService.verifyAsync(token, {
       secret: jwtConstants.secret,
     });
@@ -43,6 +60,12 @@ export class AuthGuard implements CanActivate {
 
     if (!isAvailableToGuest && payload.userType === USER_TYPE.GUEST)
       throw new BadRequestException(ERROR.NOT_AVAILABLE_TO_GUEST);
+
+    if (isOnlyForTeamMembers && !isTeamMember(payload.userType))
+      throw new BadRequestException(ERROR.ONLY_FOR_TEAM_MEMBER);
+
+    if (isOnlyForManagers && payload.userType != USER_TYPE.MANAGER)
+      throw new BadRequestException(ERROR.ONLY_FOR_MANAGER);
 
     request.session = payload;
 

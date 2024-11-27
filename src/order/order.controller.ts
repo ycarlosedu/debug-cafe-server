@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -17,6 +18,7 @@ import { UserToken } from 'src/auth/auth.dto';
 import { ProductService } from 'src/product/product.service';
 import { ORDER_STATUS, USER_TYPE } from '@prisma/client';
 import { OrderFeedbackService } from 'src/order-feedback/order-feedback.service';
+import { OnlyTeamMember } from 'src/constants';
 
 const ORDERS_USER_TYPE = {
   [USER_TYPE.STAFF]: [ORDER_STATUS.PENDING, ORDER_STATUS.IN_PREPARATION],
@@ -42,15 +44,11 @@ export class OrderController {
     private productService: ProductService,
     private orderFeedbackService: OrderFeedbackService,
   ) {}
+  private readonly logger = new Logger(OrderController.name);
 
+  @OnlyTeamMember()
   @Get('/pending')
   async getPendingOrders(@Session() userSession: UserToken) {
-    if (userSession.userType === USER_TYPE.CLIENT) {
-      throw new BadRequestException(
-        'Você não tem permissão para ver pedidos em andamento!',
-      );
-    }
-
     return this.orderService.findAll({
       where: {
         status: {
@@ -73,17 +71,9 @@ export class OrderController {
     });
   }
 
+  @OnlyTeamMember()
   @Get('/pending/:id')
-  async getPendingOrderById(
-    @Param('id') id: string,
-    @Session() userSession: UserToken,
-  ) {
-    if (userSession.userType === USER_TYPE.CLIENT) {
-      throw new BadRequestException(
-        'Você não tem permissão para ver pedidos em andamento!',
-      );
-    }
-
+  async getPendingOrderById(@Param('id') id: string) {
     const order = await this.orderService.findOne({
       where: { id },
       select: {
@@ -116,6 +106,7 @@ export class OrderController {
     };
   }
 
+  @OnlyTeamMember()
   @Patch('/pending/:id')
   async updateOrderStatus(
     @Param('id') id: string,
@@ -151,6 +142,7 @@ export class OrderController {
     };
   }
 
+  @OnlyTeamMember()
   @Delete('/pending/:id')
   async cancelOrder(
     @Param('id') id: string,

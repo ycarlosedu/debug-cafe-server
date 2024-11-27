@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Post,
   Put,
   Session,
@@ -15,6 +16,7 @@ import { AddressService } from './address.service';
 @Controller('addresses')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
+  private readonly logger = new Logger(AddressController.name);
 
   @Post()
   @UsePipes(new ZodValidationPipe(updateAddressSchema))
@@ -30,6 +32,7 @@ export class AddressController {
         },
       },
     });
+    this.logger.log(`Endereço criado para o usuário: ${userSession.email}`);
 
     return {
       address,
@@ -46,6 +49,7 @@ export class AddressController {
       where: { userId: userSession.id },
       data: addressData,
     });
+    this.logger.log(`Endereço atualizado para o usuário: ${userSession.email}`);
 
     return {
       address,

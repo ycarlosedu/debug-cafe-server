@@ -17,7 +17,7 @@ import {
   updateProductSchema,
 } from './product.dto';
 import { ProductService } from './product.service';
-import { Public } from 'src/constants';
+import { OnlyManager, Public } from 'src/constants';
 
 @Controller('products')
 export class ProductController {
@@ -60,6 +60,7 @@ export class ProductController {
     });
   }
 
+  @OnlyManager()
   @Post()
   @UsePipes(new ZodValidationPipe(createProductSchema))
   async createProduct(@Body() productData: CreateProductDto) {
@@ -71,6 +72,7 @@ export class ProductController {
     };
   }
 
+  @OnlyManager()
   @UsePipes(new ZodValidationPipe(updateProductSchema))
   @Put()
   async updateProduct(@Body() productData: UpdateProductDto) {

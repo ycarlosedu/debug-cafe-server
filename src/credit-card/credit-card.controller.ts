@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Post,
   Session,
@@ -18,6 +19,7 @@ import { hideCreditCard } from 'src/utils/hideCreditCard';
 @Controller('credit-cards')
 export class CreditCardController {
   constructor(private readonly creditCardService: CreditCardService) {}
+  private readonly logger = new Logger(CreditCardController.name);
 
   @Post()
   @UsePipes(new ZodValidationPipe(createCreditCardSchema))
@@ -33,6 +35,9 @@ export class CreditCardController {
     });
 
     if (creditCardExists.length) {
+      this.logger.error(
+        `Cartão já cadastrado: ${creditCardData.cardNumber} para o usuário: ${userSession.email}`,
+      );
       throw new BadRequestException('Cartão já cadastrado');
     }
 
@@ -44,6 +49,8 @@ export class CreditCardController {
         },
       },
     });
+
+    this.logger.log(`Cartão adicionado para o usuário: ${userSession.email}`);
 
     return {
       creditCard: {
@@ -78,6 +85,10 @@ export class CreditCardController {
       id,
       userId: userSession.id,
     });
+
+    this.logger.log(
+      `Cartão deletado: ${id} para o usuário: ${userSession.email}`,
+    );
 
     return {
       id,
