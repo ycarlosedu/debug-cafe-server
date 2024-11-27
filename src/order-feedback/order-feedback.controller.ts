@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Logger,
   Post,
   Session,
   UsePipes,
@@ -21,6 +22,7 @@ export class OrderFeedbackController {
     private readonly orderFeedbackService: OrderFeedbackService,
     private orderService: OrderService,
   ) {}
+  private readonly logger = new Logger(OrderFeedbackController.name);
 
   @Post()
   @UsePipes(new ZodValidationPipe(createOrderFeedbackSchema))
@@ -42,6 +44,10 @@ export class OrderFeedbackController {
     if (order.status !== 'DELIVERED') {
       throw new BadRequestException('O pedido deve estar entregue');
     }
+
+    this.logger.log(
+      `Feedback criado para o pedido ${feedback.orderId}, por ${userSession.email}`,
+    );
 
     return this.orderFeedbackService.createOrderFeedback(
       feedback,

@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   Post,
   Put,
+  Session,
   UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/pipes/zodValidation';
@@ -18,10 +20,12 @@ import {
 } from './product.dto';
 import { ProductService } from './product.service';
 import { OnlyManager, Public } from 'src/constants';
+import { UserToken } from 'src/auth/auth.dto';
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+  private readonly logger = new Logger(ProductController.name);
 
   @Public()
   @Get()
@@ -63,8 +67,15 @@ export class ProductController {
   @OnlyManager()
   @Post()
   @UsePipes(new ZodValidationPipe(createProductSchema))
-  async createProduct(@Body() productData: CreateProductDto) {
+  async createProduct(
+    @Body() productData: CreateProductDto,
+    @Session() userSession: UserToken,
+  ) {
     const product = await this.productService.createProduct(productData);
+
+    this.logger.log(
+      `Produto criado: ${product.name}, por ${userSession.email}`,
+    );
 
     return {
       product,
@@ -75,11 +86,18 @@ export class ProductController {
   @OnlyManager()
   @UsePipes(new ZodValidationPipe(updateProductSchema))
   @Put()
-  async updateProduct(@Body() productData: UpdateProductDto) {
+  async updateProduct(
+    @Body() productData: UpdateProductDto,
+    @Session() userSession: UserToken,
+  ) {
     const product = await this.productService.updateProduct({
       where: { id: productData.id },
       data: productData,
     });
+
+    this.logger.log(
+      `Produto ${product.name} atualizado por ${userSession.email}`,
+    );
 
     return {
       product,

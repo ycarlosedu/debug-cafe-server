@@ -112,12 +112,6 @@ export class OrderController {
     @Param('id') id: string,
     @Session() userSession: UserToken,
   ) {
-    if (userSession.userType === USER_TYPE.CLIENT) {
-      throw new BadRequestException(
-        'Você não tem permissão para alterar o status do pedido!',
-      );
-    }
-
     const order = await this.orderService.findOne({
       where: { id },
       select: {
@@ -136,6 +130,10 @@ export class OrderController {
       },
     });
 
+    this.logger.log(
+      `Atualizado status da ordem ${id} para ${UPDATE_STATUS[order.status]}, por ${userSession.email}`,
+    );
+
     return {
       status: UPDATE_STATUS[order.status],
       message: 'Status do pedido atualizado com sucesso!',
@@ -148,12 +146,6 @@ export class OrderController {
     @Param('id') id: string,
     @Session() userSession: UserToken,
   ) {
-    if (userSession.userType === USER_TYPE.CLIENT) {
-      throw new BadRequestException(
-        'Você não tem permissão para cancelar o pedido!',
-      );
-    }
-
     const order = await this.orderService.findOne({
       where: { id },
       select: {
@@ -179,6 +171,8 @@ export class OrderController {
         status: ORDER_STATUS.CANCELED,
       },
     });
+
+    this.logger.log(`Pedido ${id} cancelado, por ${userSession.email}`);
 
     return {
       status: ORDER_STATUS.CANCELED,
@@ -274,6 +268,8 @@ export class OrderController {
       orderData,
       userSession.id,
     );
+
+    this.logger.log(`Pedido ${order.id} criado, por ${userSession.email}`);
 
     return {
       order,

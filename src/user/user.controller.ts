@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Put, Session, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Put,
+  Session,
+  UsePipes,
+} from '@nestjs/common';
 import { UsersService } from './user.service';
 import { ZodValidationPipe } from 'src/pipes/zodValidation';
 import { UpdateUserDto, updateUserSchema } from './user.dto';
@@ -7,6 +15,7 @@ import { UserToken } from 'src/auth/auth.dto';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+  private readonly logger = new Logger(UsersController.name);
 
   @Get('/me')
   getUser(@Session() userSession: UserToken) {
@@ -33,6 +42,8 @@ export class UsersController {
         phone: userData.phone,
       },
     });
+
+    this.logger.log(`Usuário ${user.email} atualizou seus dados com sucesso`);
 
     return {
       user: {
