@@ -33,7 +33,7 @@ export const products: SimpleProduct[] = [
   {
     name: 'Café com Leite',
     image:
-      'https://www.receiteria.com.br/wp-content/uploads/receitas-de-cafe-com-leite.jpg',
+      'https://cloudfront-us-east-1.images.arcpublishing.com/newr7/WXHSLJM2XZNVDLP7OTLDNMYNVM.jpg',
     price: 6.75,
     description: 'Café com leite quentinho feito na hora',
     categories: [CATEGORY.HOT_COFFEE],
