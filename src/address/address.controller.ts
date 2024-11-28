@@ -37,6 +37,7 @@ export class AddressController {
 
     return {
       address,
+      message: 'Endereço cadastrado com sucesso!',
     };
   }
 

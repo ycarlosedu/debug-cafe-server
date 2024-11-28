@@ -52,7 +52,7 @@ export class UsersController {
         phone: user.phone,
         userType: user.userType,
       },
-      message: 'Usuário atualizado com sucesso!',
+      message: 'Informações atualizadas com sucesso!',
     };
   }
 }
