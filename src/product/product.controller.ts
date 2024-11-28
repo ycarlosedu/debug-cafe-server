@@ -48,7 +48,7 @@ export class ProductController {
     return this.productService.findAll({
       where: {
         AND: {
-          name: { contains: search.name },
+          name: { contains: search.name, mode: 'insensitive' },
           categories: {
             some: {
               productCategoryId: { equals: search.category },
@@ -57,7 +57,7 @@ export class ProductController {
         },
         OR: [
           {
-            name: { contains: search.name },
+            name: { contains: search.name, mode: 'insensitive' },
           },
         ],
       },
