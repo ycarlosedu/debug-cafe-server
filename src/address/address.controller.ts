@@ -40,7 +40,7 @@ export class AddressController {
   }
 
   @UsePipes(new ZodValidationPipe(updateAddressSchema))
-  @Put('/me')
+  @Put('me')
   async updateAddress(
     @Body() addressData: UpdateAddressDto,
     @Session() userSession: UserToken,
@@ -57,7 +57,7 @@ export class AddressController {
     };
   }
 
-  @Get('/me')
+  @Get('me')
   getMyAddress(@Session() userSession: UserToken) {
     return this.addressService.findOne({
       where: { userId: userSession.id },

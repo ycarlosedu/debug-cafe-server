@@ -47,7 +47,7 @@ export class OrderController {
   private readonly logger = new Logger(OrderController.name);
 
   @OnlyTeamMember()
-  @Get('/pending')
+  @Get('pending')
   async getPendingOrders(@Session() userSession: UserToken) {
     return this.orderService.findAll({
       where: {
@@ -72,7 +72,7 @@ export class OrderController {
   }
 
   @OnlyTeamMember()
-  @Get('/pending/:id')
+  @Get('pending/:id')
   async getPendingOrderById(@Param('id') id: string) {
     const order = await this.orderService.findOne({
       where: { id },
@@ -107,7 +107,7 @@ export class OrderController {
   }
 
   @OnlyTeamMember()
-  @Patch('/pending/:id')
+  @Patch('pending/:id')
   async updateOrderStatus(
     @Param('id') id: string,
     @Session() userSession: UserToken,
@@ -141,7 +141,7 @@ export class OrderController {
   }
 
   @OnlyTeamMember()
-  @Delete('/pending/:id')
+  @Delete('pending/:id')
   async cancelOrder(
     @Param('id') id: string,
     @Session() userSession: UserToken,
@@ -210,7 +210,7 @@ export class OrderController {
     });
   }
 
-  @Get('/:id')
+  @Get(':id')
   async getOrderById(
     @Param('id') id: string,
     @Session() userSession: UserToken,

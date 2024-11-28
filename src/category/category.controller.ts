@@ -32,7 +32,7 @@ export class CategoryController {
   }
 
   @Public()
-  @Get('/:id')
+  @Get(':id')
   getCategoryById(@Param('id') id: string) {
     return this.categoryService.findOne({
       where: { id },

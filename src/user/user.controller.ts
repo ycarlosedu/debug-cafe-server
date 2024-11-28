@@ -17,7 +17,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   private readonly logger = new Logger(UsersController.name);
 
-  @Get('/me')
+  @Get('me')
   getUser(@Session() userSession: UserToken) {
     return this.usersService.findOne({
       where: { id: userSession.id },
@@ -30,7 +30,7 @@ export class UsersController {
   }
 
   @UsePipes(new ZodValidationPipe(updateUserSchema))
-  @Put('/me')
+  @Put('me')
   async updateUser(
     @Body() userData: UpdateUserDto,
     @Session() userSession: UserToken,

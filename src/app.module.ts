@@ -7,6 +7,7 @@ import { ProductModule } from './product/product.module';
 import { CreditCardModule } from './credit-card/credit-card.module';
 import { OrderModule } from './order/order.module';
 import { OrderFeedbackModule } from './order-feedback/order-feedback.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { OrderFeedbackModule } from './order-feedback/order-feedback.module';
     OrderModule,
     OrderFeedbackModule,
   ],
-  providers: [],
+  controllers: [AppController],
 })
 export class AppModule {}

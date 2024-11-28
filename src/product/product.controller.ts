@@ -34,7 +34,7 @@ export class ProductController {
   }
 
   @Public()
-  @Get('/:id')
+  @Get(':id')
   getProductById(@Param('id') id: string) {
     return this.productService.findOne({
       where: { id },
@@ -42,7 +42,7 @@ export class ProductController {
   }
 
   @Public()
-  @Post('/search')
+  @Post('search')
   @UsePipes(new ZodValidationPipe(searchProductSchema))
   getProductByName(@Body() search: SearchProductDto) {
     return this.productService.findAll({
