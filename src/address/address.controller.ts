@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Logger,
+  Param,
   Post,
   Put,
   Session,
@@ -69,5 +70,13 @@ export class AddressController {
         cep: true,
       },
     });
+  }
+
+  @Get('cep/:cep')
+  async getAddressByCep(@Param() { cep }: { cep: string }) {
+    const address = await this.addressService.getAddressByCep(cep);
+    return {
+      address,
+    };
   }
 }

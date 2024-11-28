@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { UsersService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ChangeUserTypeDto, SignInDto, SignUpDto, UserToken } from './auth.dto';
@@ -37,7 +32,7 @@ export class AuthService {
       this.logger.error(
         `Tentativa de Login. Credenciais inválidas para o usuário: ${email}`,
       );
-      throw new UnauthorizedException(ERROR.INVALID_CREDENTIALS);
+      throw new BadRequestException(ERROR.INVALID_CREDENTIALS);
     }
     this.logger.log(`Login realizado com sucesso para o usuário: ${email}`);
 
@@ -58,7 +53,7 @@ export class AuthService {
       this.logger.error(
         `Tentativa de Cadastro. E-mail já cadastrado: ${email}`,
       );
-      throw new UnauthorizedException(ERROR.EMAIL_ALREADY_EXISTS);
+      throw new BadRequestException(ERROR.EMAIL_ALREADY_EXISTS);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
