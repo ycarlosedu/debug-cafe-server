@@ -37,4 +37,13 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
+
+  async deleteUser(params: {
+    where: Prisma.UserWhereUniqueInput;
+  }): Promise<User> {
+    const { where } = params;
+    return this.prisma.user.delete({
+      where,
+    });
+  }
 }

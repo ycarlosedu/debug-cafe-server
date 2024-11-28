@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const updateUserSchema = z
   .object({
-    fullName: z.string().min(1, REQUIRED.FIELD).min(10, REQUIRED.MIN(10)),
+    fullName: z.string().min(1, REQUIRED.FIELD).min(5, REQUIRED.MIN(5)),
     phone: z
       .string()
       .min(1, REQUIRED.FIELD)

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Put,
@@ -54,5 +55,14 @@ export class UsersController {
       },
       message: 'Informações atualizadas com sucesso!',
     };
+  }
+
+  @Delete('me')
+  async deleteUser(@Session() userSession: UserToken) {
+    await this.usersService.deleteUser({ where: { id: userSession.id } });
+
+    this.logger.log(`Usuário ${userSession.email} deletou sua conta`);
+
+    return { message: 'Conta deletada com sucesso!' };
   }
 }

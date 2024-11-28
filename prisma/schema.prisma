@@ -23,7 +23,7 @@ model Address {
   userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   order     Order[]
 }
 
@@ -75,8 +75,8 @@ model CategoriesOnProducts {
   productCategoryId String
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  product           Product         @relation(fields: [productId], references: [id])
-  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onDelete: Cascade)
 
   @@id([productId, productCategoryId])
 }
@@ -90,7 +90,7 @@ model CreditCard {
   userId         String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([cardNumber, userId])
 }
@@ -101,8 +101,8 @@ model ProductsOnOrder {
   quantity  Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id])
-  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@id([productId, orderId])
 }
@@ -124,8 +124,8 @@ model Order {
   addressId       String
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  user            User              @relation(fields: [userId], references: [id])
-  address         Address           @relation(fields: [addressId], references: [id])
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address         Address           @relation(fields: [addressId], references: [id], onDelete: Cascade)
   productsOnOrder ProductsOnOrder[]
   feedback        OrderFeedback?
 }
@@ -138,7 +138,7 @@ model OrderFeedback {
   deliveryStars   Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  order           Order    @relation(fields: [orderId], references: [id])
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model UserTypePasswords {

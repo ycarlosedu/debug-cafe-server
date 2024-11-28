@@ -14,7 +14,7 @@ export type SignInDto = z.infer<typeof signInSchema>;
 
 export const signUpSchema = z
   .object({
-    fullName: z.string().min(1, REQUIRED.FIELD).min(10, REQUIRED.MIN(10)),
+    fullName: z.string().min(1, REQUIRED.FIELD).min(5, REQUIRED.MIN(5)),
     email: z.string().min(1, REQUIRED.FIELD).email(INVALID.EMAIL),
     phone: z
       .string()
